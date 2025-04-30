@@ -1,0 +1,29 @@
+{
+  "team-stats": {
+    "mapsPlayed": 1355,
+    "wdl": [
+      806,
+      2,
+      547
+    ],
+    "totalKills": 116894,
+    "totalDeaths": 109262,
+    "roundsPlayed": 34181,
+    "kdRatio": 1.07,
+    "winRate": 59.48
+  },
+  "news": [
+    {
+      "title": "Vitality outlast Falcons in IEM Melbourne final thriller to clinch Grand Slam",
+      "link": "https://www.hltv.org/news/41556/vitality-outlast-falcons-in-iem-melbourne-final-thriller-to-clinch-grand-slam"
+    },
+    {
+      "title": "Falcons stomp MOUZ en route to Melbourne final",
+      "link": "https://www.hltv.org/news/41548/falcons-stomp-mouz-en-route-to-melbourne-final"
+    },
+    {
+      "title": "Falcons brush aside GamerLegion in Melbourne",
+      "link": "https://www.hltv.org/news/41542/falcons-brush-aside-gamerlegion-in-melbourne"
+    }
+  ]
+}

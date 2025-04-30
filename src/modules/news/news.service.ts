@@ -1,24 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { ScrappingService } from '../scrapping/scrapping.service';
 import { NewsItem } from './interfaces/news.interface';
-
+import { FileCacheService } from '../cache/file-cache.service';
 @Injectable()
 export class NewsService {
-  private cache: NewsItem[] = [];
-  private lastUpdate: number | null = null;
-  private readonly cacheDuration = 1000 * 60 * 60 * 3; // 3 hours
-
-  constructor(private readonly scrappingService: ScrappingService) {}
+  constructor(
+    private readonly scrappingService: ScrappingService,
+    private readonly fileCacheService: FileCacheService,
+  ) {}
 
   async getNews(): Promise<NewsItem[]> {
-    const now = Date.now();
-    // Check if the cache is still valid
-    // If the cache is still valid, return the cached data
-    // If the cache is not valid, fetch new data
-    if (this.lastUpdate && now - this.lastUpdate < this.cacheDuration) {
-      return this.cache;
+    const cacheKey = 'news';
+    const cached = await this.fileCacheService.get<NewsItem[]>(cacheKey);
+    if (cached) {
+      console.log('Cache hit');
+      return cached;
     }
 
+    console.log('Cache miss');
     const url = 'https://www.hltv.org';
     const selector = '.standard-box.standard-list .newsline.article';
 
@@ -35,7 +34,7 @@ export class NewsService {
           const link = 'https://www.hltv.org' + item.getAttribute('href');
           return { title, link };
         })
-        .filter((item) => item.title?.toLowerCase().includes('falcons'));
+        .filter((item) => item.title?.toLowerCase().includes('furia'));
     };
     //Scrape the news from HLTV
     const news = await this.scrappingService.scrape<NewsItem[]>(
@@ -43,10 +42,8 @@ export class NewsService {
       selector,
       extractor,
     );
-    //Update the cache
-    this.cache = news;
-    this.lastUpdate = now;
-
+    await this.fileCacheService.set(cacheKey, news);
+    console.log('Cache set');
     return news;
   }
 }
