@@ -9,17 +9,16 @@ export interface TeamStats {
 }
 
 export interface PlayerStats {
-  name: string;
-  kills: number;
-  deaths: number;
-  assists: number;
-  rating: number;
-  kdRatio: number;
+  totalKills: number;
   headshotPercentage: number;
+  totalDeaths: number;
+  kdRatio: number;
+  damagePerRound: number;
+  grenadeDamagePerRound: number;
+  mapsPlayed: number;
   roundsPlayed: number;
   killsPerRound: number;
-  deathsPerRound: number;
   assistsPerRound: number;
-  impact: number;
-  adr: number;
+  deathsPerRound: number;
+  rating: number;
 }
