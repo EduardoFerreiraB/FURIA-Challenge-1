@@ -9,4 +9,10 @@ export class MatchesController {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return this.matchesService.getRecentMatches();
   }
+
+  @Get('next')
+  async getNextMatches() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.matchesService.getNextMatches();
+  }
 }

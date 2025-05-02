@@ -110,7 +110,12 @@ export class StatsService {
         killsPerRound: parseFloat(stats.get('Kills / round') || '0'),
         assistsPerRound: parseFloat(stats.get('Assists / round') || '0'),
         deathsPerRound: parseFloat(stats.get('Deaths / round') || '0'),
-        rating: parseFloat(stats.get('Rating 1.0') || '0'),
+        rating: parseFloat(
+          stats.get('Rating 1.0') ||
+            stats.get('Rating 2.0') ||
+            stats.get('Rating 2.1') ||
+            '0',
+        ),
       };
     };
 
