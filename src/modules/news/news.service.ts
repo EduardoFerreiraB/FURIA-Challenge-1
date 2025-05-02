@@ -18,23 +18,26 @@ export class NewsService {
     }
 
     console.log('Cache miss');
-    const url = 'https://www.hltv.org';
-    const selector = '.standard-box.standard-list .newsline.article';
+    const url = 'https://www.hltv.org/team/8297/furia#tab-newsBox';
+    const selector = '.tab-content .subTab-newsArticle';
 
     const extractor = () => {
       const items = Array.from(
-        document.querySelectorAll(
-          '.standard-box.standard-list .newsline.article',
-        ),
+        document.querySelectorAll('.tab-content .subTab-newsArticle'),
       );
-      return items
-        .map((item) => {
-          const title =
-            item.querySelector('.newstext')?.textContent?.trim() || '';
-          const link = 'https://www.hltv.org' + item.getAttribute('href');
-          return { title, link };
-        })
-        .filter((item) => item.title?.toLowerCase().includes('furia'));
+      return items.map((item) => {
+        let title = item.textContent?.trim() || '';
+        const link = 'https://www.hltv.org' + item.getAttribute('href');
+        const dateText =
+          item.querySelector('.subTab-newsDate')?.textContent?.trim() || '';
+
+        title = title.replace(/^\d{1,2}\/\d{1,2}/, '').trim();
+
+        const [day, month] = dateText.split('/').map(Number);
+        const year = new Date().getFullYear();
+        const date = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        return { title, link, date };
+      });
     };
     //Scrape the news from HLTV
     const news = await this.scrappingService.scrape<NewsItem[]>(
@@ -42,8 +45,10 @@ export class NewsService {
       selector,
       extractor,
     );
-    await this.fileCacheService.set(cacheKey, news);
+
+    const latestNews = news.slice(0, 5);
+    await this.fileCacheService.set(cacheKey, latestNews);
     console.log('Cache set');
-    return news;
+    return latestNews;
   }
 }
