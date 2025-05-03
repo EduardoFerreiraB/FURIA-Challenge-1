@@ -4,7 +4,7 @@ import { ScrappingService } from '../scrapping/scrapping.service';
 @Injectable()
 export class MatchesService {
   constructor(private readonly scrappingService: ScrappingService) {}
-  async getRecentMatches(): Promise<any> {
+  async getRecentMatches(page: number, pageSize: number): Promise<any> {
     const url = 'https://www.hltv.org/team/8297/furia#tab-matchesBox';
     const selector = '.table-container.match-table tbody .team-row';
 
@@ -30,13 +30,6 @@ export class MatchesService {
         const matchLink =
           row.querySelector('.stats-button-cell a')?.getAttribute('href') || '';
 
-        console.log('Date:', date);
-        console.log('Team 1:', team1);
-        console.log('Team 2:', team2);
-        console.log('Scores:', scores);
-        console.log('Score Team 1:', scoreTeam1);
-        console.log('Score Team 2:', scoreTeam2);
-        console.log('Match Link:', matchLink);
         return {
           date,
           team1,
@@ -46,7 +39,26 @@ export class MatchesService {
         };
       });
     };
-    return this.scrappingService.scrape(url, selector, extractor);
+
+    const allMatches = await this.scrappingService.scrape(
+      url,
+      selector,
+      extractor,
+    );
+
+    const start = (page - 1) * pageSize;
+    console.log('start: ', start);
+    console.log('pageSize: ', pageSize);
+    const end = start + Number(pageSize);
+    console.log('end: ', end);
+    const paginatedMatches = allMatches.slice(start, end);
+
+    return {
+      matches: paginatedMatches,
+      total: allMatches.length,
+      page,
+      pageSize,
+    };
   }
 
   async getNextMatches(): Promise<any> {

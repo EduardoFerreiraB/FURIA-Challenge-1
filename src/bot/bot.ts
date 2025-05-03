@@ -17,6 +17,28 @@ bot.start((ctx) => {
     { source: 'src/bot/images/start.png' },
     {
       caption:
+        'Bem-vindo! Eu posso te ajudar a encontrar informações sobre a FURIA. Use os botões abaixo ou o comando /help para ver as opções disponíveis.',
+      parse_mode: 'Markdown',
+      ...Markup.inlineKeyboard([
+        [
+          Markup.button.callback('📰 Últimas notícias', 'news'),
+          Markup.button.callback('⬅️ Últimos jogos', 'recent'),
+        ],
+        [
+          Markup.button.callback('⚔️ Próximos jogos', 'next'),
+          Markup.button.callback('📊 Estatísticas', 'stats'),
+        ],
+        [Markup.button.callback('📱 Contatos/Redes Sociais', 'socials')],
+      ]),
+    },
+  );
+});
+
+bot.action('startbtton', (ctx) => {
+  ctx.replyWithPhoto(
+    { source: 'src/bot/images/start.png' },
+    {
+      caption:
         'Bem-vindo! Eu posso te ajudar a encontrar informações sobre a FURIA. Use os botões abaixo ou os comandos /recent, /next ou /news para começar!',
       parse_mode: 'Markdown',
       ...Markup.inlineKeyboard([
@@ -36,23 +58,20 @@ bot.start((ctx) => {
 
 bot.action('recent', async (ctx) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/matches/recent`);
-    const matches = response.data;
+    const page = 1;
+    const pageSize = 5;
+
+    const response = await axios.get(
+      `${API_BASE_URL}/matches/recent?page=${page}&pageSize=${pageSize}`,
+    );
+    const { matches, total } = response.data;
 
     if (matches.length === 0) {
       ctx.reply('Nenhum jogo recente encontrado.');
       return;
     }
-    const message = matches
-      .map(
-        (match: any) =>
-          `🕒 ${match.date}\n🏆 ${match.team1} ${match.score} ${match.team2}\n🔗 [Detalhes do jogo](${match.matchLink}
-                )`,
-      )
-      .join('\n\n');
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    ctx.replyWithMarkdown(message);
+    sendPaginatedMatches(ctx, matches, page, pageSize, total);
   } catch (error) {
     console.error('Erro ao buscar jogos recentes:', error);
     ctx.reply('Desculpe, não consegui buscar os jogos recentes no momento.');
@@ -76,7 +95,7 @@ bot.action('next', async (ctx) => {
       )
       .join('\n\n');
 
-    ctx.replyWithMarkdown(message);
+    ctx.replyWithMarkdownV2(message);
   } catch (error) {
     console.error('Erro ao buscar próximos jogos:', error);
     ctx.reply('Desculpe, não consegui buscar os próximos jogos no momento.');
@@ -111,8 +130,11 @@ bot.action('stats', async (ctx) => {
   await ctx.reply(
     'Escolha uma opção:',
     Markup.inlineKeyboard([
-      Markup.button.callback('📊 Estatísticas do time', 'team_stats'),
-      Markup.button.callback('👥 Estatísticas de um jogador', 'player_stats'),
+      [
+        Markup.button.callback('📊 Estatísticas do time', 'team_stats'),
+        Markup.button.callback('👥 Estatísticas de um jogador', 'player_stats'),
+      ],
+      [Markup.button.callback('⬅️ Voltar', 'startbtton')],
     ]),
   );
 });
@@ -132,7 +154,10 @@ bot.action('team_stats', async (ctx) => {
       `🔥 Taxa de Vitória: ${stats.winRate}%\n` +
       `🎯 K/D Ratio: ${stats.kdRatio}`;
 
-    ctx.replyWithMarkdown(message);
+    await ctx.replyWithMarkdown(
+      message,
+      Markup.inlineKeyboard([[Markup.button.callback('⬅️ Voltar', 'stats')]]),
+    );
   } catch (error) {
     console.error('Erro ao buscar estatísticas do time:', error);
     ctx.reply(
@@ -152,13 +177,14 @@ bot.action('player_stats', async (ctx) => {
         [Markup.button.callback('YEKINDAR', 'player_YEKINDAR')],
         [Markup.button.callback('KSCERATO', 'player_KSCERATO')],
         [Markup.button.callback('molodoy', 'player_molodoy')],
+        [Markup.button.callback('⬅️ Voltar', 'stats')],
       ]),
     },
   );
 });
 
 bot.action(/player_(.+)/, async (ctx) => {
-  let playerName = ctx.match[1]; // Extrai o nome do jogador da ação
+  let playerName = ctx.match[1];
   console.log('Jogador selecionado:', playerName);
 
   if (playerName === 'fallen') {
@@ -206,7 +232,13 @@ bot.action(/player_(.+)/, async (ctx) => {
       `🔄 Rounds Jogados: ${stats.roundsPlayed}\n` +
       `⭐ Rating: ${stats.rating}`;
 
-    ctx.replyWithMarkdown(message);
+    await ctx.replyWithMarkdown(
+      message,
+      Markup.inlineKeyboard([
+        [Markup.button.callback('⬅️ Voltar', 'player_stats')],
+        [Markup.button.callback('📊 Estatísticas do time', 'team_stats')],
+      ]),
+    );
   } catch (error) {
     console.error(
       `Erro ao buscar estatísticas do jogador ${playerName}:`,
@@ -234,9 +266,33 @@ bot.action('socials', async (ctx) => {
         Markup.button.url('📸 Instagram', 'https://www.instagram.com/furiagg'),
         Markup.button.url('🌐 Site oficial', 'https://furia.gg'),
       ],
+      [Markup.button.callback('⬅️ Voltar', 'start')],
     ]),
   );
 });
+
+bot.action(/recent_page_(\d+)/, async (ctx) => {
+  const page = parseInt(ctx.match[1], 10);
+  const pageSize = 5;
+
+  try {
+    const response = await axios.get(
+      `${API_BASE_URL}/matches/recent?page=${page}&pageSize=${pageSize}`,
+    );
+    const { matches, total } = response.data;
+
+    if (matches.length === 0) {
+      ctx.reply('Nenhum jogo encontrado para esta página.');
+      return;
+    }
+
+    sendPaginatedMatches(ctx, matches, page, pageSize, total);
+  } catch (error) {
+    console.error('Erro ao buscar jogos recentes:', error);
+    ctx.reply('Desculpe, não consegui buscar os jogos recentes no momento.');
+  }
+});
+
 // Comando /help
 bot.help((ctx) => {
   ctx.reply(
@@ -320,6 +376,46 @@ bot.command('news', async (ctx) => {
     ctx.reply('Desculpe, não consegui buscar as notícias no momento.');
   }
 });
+
+function sendPaginatedMatches(
+  ctx: any,
+  matches: any[],
+  page: number,
+  pageSize: number,
+  total: number,
+) {
+  const message = matches
+    .map(
+      (match: any) =>
+        `🕒 ${match.date}\n🏆 ${match.score}\n🔗 [Detalhes do jogo](${match.matchLink})`,
+    )
+    .join('\n\n');
+
+  const totalPages = Math.ceil(total / pageSize);
+
+  // Adiciona os botões de navegação
+  const buttons = [
+    Markup.button.callback('⬅️ Página anterior', `recent_page_${page - 1}`),
+    Markup.button.callback('⬅️ Voltar', 'startbtton'),
+    Markup.button.callback('➡️ Próxima página', `recent_page_${page + 1}`),
+  ];
+  if (page === 1) {
+    buttons.shift(); // Remove o botão de página anterior se estiver na primeira página
+  }
+  if (page === totalPages) {
+    buttons.pop(); // Remove o botão de próxima página se estiver na última página
+  }
+  if (totalPages === 1) {
+    buttons.pop(); // Remove o botão de próxima página se houver apenas uma página
+  }
+  if (page > totalPages) {
+    ctx.reply('Página inválida.');
+    return;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  ctx.replyWithMarkdown(message, Markup.inlineKeyboard(buttons as any));
+}
 
 // Inicia o bot
 bot.launch();
