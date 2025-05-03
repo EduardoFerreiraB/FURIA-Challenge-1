@@ -17,7 +17,7 @@ bot.start((ctx) => {
     { source: 'src/bot/images/start.png' },
     {
       caption:
-        'Bem-vindo! Eu posso te ajudar a encontrar informações sobre a FURIA. Use os botões abaixo ou o comando /help para ver as opções disponíveis.',
+        'Bem-vindo! Sou o bot furioso, eu posso te ajudar a encontrar informações sobre a FURIA. Use os botões abaixo ou o comando /help para ver as opções disponíveis.',
       parse_mode: 'Markdown',
       ...Markup.inlineKeyboard([
         [
@@ -296,85 +296,9 @@ bot.action(/recent_page_(\d+)/, async (ctx) => {
 // Comando /help
 bot.help((ctx) => {
   ctx.reply(
-    'Comandos disponíveis:\n/recent - Últimos jogos\n/next - Próximos jogos\n/news - Últimas notícias',
+    'Use /start para ver as opções disponíveis e use os botões disponiveis para navegar nos comandos.\n' +
+      '/help - Ver esta mensagem novamente',
   );
-});
-
-// Comando /recent para buscar os últimos jogos
-bot.command('recent', async (ctx) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/matches/recent`);
-
-    const matches = response.data;
-
-    if (matches.length === 0) {
-      ctx.reply('Nenhum jogo recente encontrado.');
-      return;
-    }
-
-    const message = matches
-      .map(
-        (match: any) =>
-          `🕒 ${match.date}\n🏆 ${match.team1} ${match.score} ${match.team2}\n🔗 [Detalhes do jogo](${match.matchLink})`,
-      )
-      .join('\n\n');
-
-    ctx.replyWithMarkdown(message);
-  } catch (error) {
-    console.error('Erro ao buscar jogos recentes:', error);
-    ctx.reply('Desculpe, não consegui buscar os jogos recentes no momento.');
-  }
-});
-
-// Comando /next para buscar os próximos jogos
-bot.command('next', async (ctx) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/matches/next`);
-
-    const matches = response.data;
-
-    if (matches.length === 0) {
-      ctx.reply('Nenhum próximo jogo encontrado.');
-      return;
-    }
-
-    const message = matches
-      .map(
-        (match: any) =>
-          `🕒 ${match.date}\n🏆 ${match.team1} vs ${match.team2}\n🔗 [Detalhes do jogo](${match.matchLink})`,
-      )
-      .join('\n\n');
-
-    ctx.replyWithMarkdown(message);
-  } catch (error) {
-    console.error('Erro ao buscar próximos jogos:', error);
-    ctx.reply('Desculpe, não consegui buscar os próximos jogos no momento.');
-  }
-});
-
-// Comando /news para buscar as últimas notícias
-bot.command('news', async (ctx) => {
-  try {
-    const response = await axios.get(`${API_BASE_URL}/news`);
-    const news = response.data;
-
-    if (news.length === 0) {
-      ctx.reply('Nenhuma notícia encontrada.');
-      return;
-    }
-
-    const message = news
-      .map(
-        (item: any) =>
-          `📰 *${item.title}*\n📅 ${item.date}\n🔗 [Leia mais](${item.link})`,
-      )
-      .join('\n\n');
-
-    ctx.replyWithMarkdown(message);
-  } catch (error) {
-    console.error('Erro ao buscar notícias:', error);
-    ctx.reply('Desculpe, não consegui buscar as notícias no momento.');
-  }
 });
 
 function sendPaginatedMatches(

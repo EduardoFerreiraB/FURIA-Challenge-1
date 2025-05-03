@@ -1,98 +1,108 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# FURIA_ChatBOT
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)[![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)[![Telegram Bot](https://img.shields.io/badge/Telegram%20Bot-0088cc?style=for-the-badge&logo=telegram&logoColor=white)](https://core.telegram.org/bots)[![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)](http://localhost:3000/api) 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Esse projeto é um chat bot para telegram que fornece algumas informações sobre a equipe da FURIA, mais focado no time de CS, o projeto foi desenvolvido como desafio técnico para uma vaga na FURIA.
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Rodando localmente
 
-## Project setup
+Clone o projeto
 
 ```bash
-$ npm install
+  git clone https://github.com/EduardoFerreiraB/FURIA-Challenge-1
 ```
 
-## Compile and run the project
+Entre no diretório do projeto
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+  cd FURIA-Challenge-1
 ```
 
-## Run tests
+Instale as dependências
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+  npm install
 ```
 
-## Deployment
+**Para rodar localmente você vai precisar obter um token API de um bot no Telegram** 
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+1.Crie um bot no Telegram
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Abra o Telegram e procure pelo usuario [BotFather.](https://t.me/BotFather)
+
+Inicie uma conversa com /newbot
+
+Siga as instruções para escolher um nome para o bot e um nome de usuario unico para o bot
+
+Após criar o bot, você vai receber um **token de API** algo como:
+```bash
+  123456789:ABCDefghIJKLmnopQRSTuvwxYZ1234567890
+```
+Guarde esse token.
+
+**Configurando o token no projeto**
+
+Abra a pasta do projeto novamente e crie um arquivo .env na raiz do projeto.
+
+Adicione o token ao arquivo .env
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+  BOT_TOKEN=123456789:ABCDefghIJKLmnopQRSTuvwxYZ1234567890
+```
+**Token configurado**
+
+Inicie o servidor
+
+```bash
+  npm run start:all
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Como usar o chat
 
-## Resources
+Depois de tudo configurado e o servidor rodando é hora de usar o chat.
 
-Check out a few resources that may come in handy when working with NestJS:
+Ao criar o chat no telegram junto com o Token API você vai ter também o link para acessar o seu chat, geralmente é algo como t.me/UsernameDoSeuBot ou pode acessar pesquisando por @UsernameDoSeuBot
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+Para começar use o comando /start para iniciar a conversa com o bot.
 
-## Support
+![Como é a resposta para o /start](assets/start.png)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Como pode ver você tem 5 opções de comandos.
 
-## Stay in touch
+**Últimas notícias**
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+   - Te mostra as ultimas nóticias sobre o time da furia.
 
-## License
+**Últimos jogos**
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+   - Te mostra os ultimos jogos da furia.
+
+**Próximos jogos**
+
+   - Te mostra qual sera o proximo confronto da furia, com data e time adversario.
+
+**Estátisticas**
+
+   - Te traz duas opções para escolher:
+
+       - **Estátisticas do time**
+           
+          - Mostra as Estátisticas geral do time da furia.
+    
+       - **Estátisticas de um Player especifico**
+       
+          - Você pode escolher um dos 5 jogadores do time da furia para ver as estátisticas pessoais do Player.
+
+**Contatos/Redes Sociais**
+
+   - Essa opção é para deixar você torcedor mais perto do time da FURIA, com o link de todos os contatos da FURIA, site, Whatsapp, X/Twitter e Instagram.
+
+
+Essas são as opções do Chat, é simples e prático navegar por elas e ficar por dentro de tudo sobre o time de CS da FURIA.
+## Documentação
+***Inicie o servidor primeiro***
+
+[Documentação](http://localhost:3000/api#/)
+
