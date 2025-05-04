@@ -5,6 +5,11 @@
 
 Esse projeto é um chat bot para telegram que fornece algumas informações sobre a equipe da FURIA, mais focado no time de CS, o projeto foi desenvolvido como desafio técnico para uma vaga na FURIA.
 
+## Acesse o chat no telegram
+
+Pesquise por @ChallengeFuriabot no telegram ou acesse o link do chat:
+
+[FuriaChatBOT](https://t.me/ChallengeFuriabot)
 
 ## Rodando localmente
 
@@ -60,7 +65,7 @@ Inicie o servidor
 ```
 
 ## Como usar o chat
-**Para usar o chat acesse o seguinte link do chat no telegram:
+**Para usar o chat acesse o seguinte link do chat no telegram:**
 [FuriaChatBOT](https://t.me/ChallengeFuriabot)
 
 **Se você quiser testar o seu chat que vai rodar localmente siga esses passos:**
