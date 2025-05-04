@@ -60,6 +60,10 @@ Inicie o servidor
 ```
 
 ## Como usar o chat
+**Para usar o chat acesse o seguinte link do chat no telegram:
+[FuriaChatBOT](https://t.me/ChallengeFuriabot)
+
+**Se você quiser testar o seu chat que vai rodar localmente siga esses passos:**
 
 Depois de tudo configurado e o servidor rodando é hora de usar o chat.
 
@@ -102,7 +106,6 @@ Como pode ver você tem 5 opções de comandos.
 
 Essas são as opções do Chat, é simples e prático navegar por elas e ficar por dentro de tudo sobre o time de CS da FURIA.
 ## Documentação
-***Inicie o servidor primeiro***
 
 [Documentação](http://localhost:3000/api#/)
 
