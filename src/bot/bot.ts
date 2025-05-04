@@ -66,11 +66,6 @@ bot.action('recent', async (ctx) => {
     );
     const { matches, total } = response.data;
 
-    if (matches.length === 0) {
-      ctx.reply('Nenhum jogo recente encontrado.');
-      return;
-    }
-
     sendPaginatedMatches(ctx, matches, page, pageSize, total);
   } catch (error) {
     console.error('Erro ao buscar jogos recentes:', error);
@@ -95,7 +90,12 @@ bot.action('next', async (ctx) => {
       )
       .join('\n\n');
 
-    ctx.replyWithMarkdownV2(message);
+    ctx.replyWithMarkdownV2(
+      message,
+      Markup.inlineKeyboard([
+        [Markup.button.callback('⬅️ Voltar', 'startbtton')],
+      ]),
+    );
   } catch (error) {
     console.error('Erro ao buscar próximos jogos:', error);
     ctx.reply('Desculpe, não consegui buscar os próximos jogos no momento.');
@@ -119,7 +119,12 @@ bot.action('news', async (ctx) => {
       )
       .join('\n\n');
 
-    ctx.replyWithMarkdown(message);
+    ctx.replyWithMarkdown(
+      message,
+      Markup.inlineKeyboard([
+        [Markup.button.callback('⬅️ Voltar', 'startbtton')],
+      ]),
+    );
   } catch (error) {
     console.error('Erro ao buscar notícias:', error);
     ctx.reply('Desculpe, não consegui buscar as notícias no momento.');
@@ -154,9 +159,14 @@ bot.action('team_stats', async (ctx) => {
       `🔥 Taxa de Vitória: ${stats.winRate}%\n` +
       `🎯 K/D Ratio: ${stats.kdRatio}`;
 
-    await ctx.replyWithMarkdown(
-      message,
-      Markup.inlineKeyboard([[Markup.button.callback('⬅️ Voltar', 'stats')]]),
+    await ctx.replyWithPhoto(
+      { source: 'src/bot/images/lineup.png' },
+      {
+        caption: message,
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback('⬅️ Voltar', 'stats')],
+        ]),
+      },
     );
   } catch (error) {
     console.error('Erro ao buscar estatísticas do time:', error);
@@ -208,13 +218,6 @@ bot.action(/player_(.+)/, async (ctx) => {
   const playerImage = playerImages[playerName];
 
   try {
-    if (playerImage) {
-      await ctx.replyWithPhoto(
-        { source: playerImage },
-        { caption: `📸 Foto de ${playerName}` },
-      );
-    }
-
     const response = await axios.get(
       `${API_BASE_URL}/stats/player/${playerName}`,
     );
@@ -232,12 +235,15 @@ bot.action(/player_(.+)/, async (ctx) => {
       `🔄 Rounds Jogados: ${stats.roundsPlayed}\n` +
       `⭐ Rating: ${stats.rating}`;
 
-    await ctx.replyWithMarkdown(
-      message,
-      Markup.inlineKeyboard([
-        [Markup.button.callback('⬅️ Voltar', 'player_stats')],
-        [Markup.button.callback('📊 Estatísticas do time', 'team_stats')],
-      ]),
+    await ctx.replyWithPhoto(
+      { source: playerImage },
+      {
+        caption: message,
+        ...Markup.inlineKeyboard([
+          [Markup.button.callback('⬅️ Voltar', 'player_stats')],
+          [Markup.button.callback('📊 Estatísticas do time', 'team_stats')],
+        ]),
+      },
     );
   } catch (error) {
     console.error(
@@ -266,7 +272,7 @@ bot.action('socials', async (ctx) => {
         Markup.button.url('📸 Instagram', 'https://www.instagram.com/furiagg'),
         Markup.button.url('🌐 Site oficial', 'https://furia.gg'),
       ],
-      [Markup.button.callback('⬅️ Voltar', 'start')],
+      [Markup.button.callback('⬅️ Voltar', 'startbtton')],
     ]),
   );
 });

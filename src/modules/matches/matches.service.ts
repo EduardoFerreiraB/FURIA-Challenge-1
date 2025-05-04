@@ -47,10 +47,7 @@ export class MatchesService {
     );
 
     const start = (page - 1) * pageSize;
-    console.log('start: ', start);
-    console.log('pageSize: ', pageSize);
     const end = start + Number(pageSize);
-    console.log('end: ', end);
     const paginatedMatches = allMatches.slice(start, end);
 
     return {
